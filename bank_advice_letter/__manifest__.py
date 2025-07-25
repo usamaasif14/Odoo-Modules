@@ -1,29 +1,30 @@
-# Copyright © 2022 Pearl Solutions (https://pearlsol.com)
+# Copyright © 2025 Pearl Solutions (https://pearlsol.com)
 # License OPL-1 (https://www.odoo.com/documentation/18.0/legal/licenses.html).
+
 {
     'name': 'Bank Advice Letter',
     'version': '18.0.1.0.0',
     'category': 'Human Resources/Payroll',
     'summary': 'Generate bank advice letters for payroll processing',
     'description': """
-This module extends the HR Payroll functionality to generate
-bank advice letters for salary payments.
+<h2>Bank Advice Letter for Payroll</h2>
+<p>This module extends the HR Payroll functionality to generate bank advice letters for salary payments.</p>
 
-Key Features:
--------------
-- Generate advice letters grouped by journal (bank or cash)
-- Bank selection for payroll batches
-- Employee bank account management
-- Formatted printable reports (advice letter)
-- Cheque details tracking
-- Journal-specific payment creation
+<h3>Key Features:</h3>
+<ul>
+  <li>Generate advice letters grouped by journal (bank or cash)</li>
+  <li>Bank selection for payroll batches</li>
+  <li>Employee bank account management</li>
+  <li>Formatted printable reports (advice letter)</li>
+  <li>Cheque details tracking</li>
+  <li>Journal-specific payment creation</li>
+</ul>
 
-Configuration:
---------------
-Make sure to configure the **Payable Account** in:
-Accounting > Settings > Journals > Salaries (SLR)
+<h3>Configuration:</h3>
+<p>Make sure to configure the <strong>Payable Account</strong> in:</p>
+<p><em>Accounting &gt; Settings &gt; Journals &gt; Salaries (SLR)</em></p>
 """,
-    'author': 'Pearl Solutions',
+    'author': 'Usama Asif',
     'website': 'https://pearlsol.com/',
     'license': 'OPL-1',
     'support': 'info@pearlsol.com',
