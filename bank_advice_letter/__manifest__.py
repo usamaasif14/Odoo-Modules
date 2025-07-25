@@ -27,7 +27,7 @@
     'author': 'Usama Asif',
     'website': 'https://pearlsol.com/',
     'license': 'OPL-1',
-    'support': 'info@pearlsol.com',
+    'support': 'usamaasifofficial@gmail.com',
     'price': 178.0,
     'currency': 'USD',
     'depends': ['base', 'hr_payroll', 'hr', 'web'],
