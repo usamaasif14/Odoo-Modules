@@ -1,0 +1,32 @@
+<odoo>
+    <record id="view_hr_payslip_run_payment_method_line_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.run.payment.method.line.tree</field>
+        <field name="model">hr.payslip.run.payment.method.line</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="payment_type"/>
+                <field name="bank_id"/>
+                <field name="journal_id"/>
+                <field name="cheque_number" readonly="1"/>
+                <field name="cheque_date" readonly="1"/>
+                <field name="cheque_amount"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_hr_payslip_run_payment_method_line_form" model="ir.ui.view">
+        <field name="name">hr.payslip.run.payment.method.line.form</field>
+        <field name="model">hr.payslip.run.payment.method.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="payment_type"/>
+                    <field name="bank_id"/>
+                    <field name="journal_id"/>
+                    <field name="cheque_number" readonly="1"/>
+                    <field name="cheque_date" readonly="1"/>
+                    <field name="cheque_amount"/>
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo> 

@@ -1,0 +1,24 @@
+<odoo>
+    <record id="view_hr_payslip_run_payment_method_line_form_inherit_journal_required" model="ir.ui.view">
+        <field name="name">hr.payslip.run.payment.method.line.form.inherit.journal.required</field>
+        <field name="model">hr.payslip.run.payment.method.line</field>
+        <field name="inherit_id" ref="bank_advice_letter.view_hr_payslip_run_payment_method_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='journal_id']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+        </field>
+    </record>
+  
+   <!-- <record id="view_hr_payslip_run_payment_method_line_tree_inherit_view_payment" model="ir.ui.view">
+        <field name="name">hr.payslip.run.payment.method.line.tree.inherit.view.payment</field>
+        <field name="model">hr.payslip.run.payment.method.line</field>
+        <field name="inherit_id" ref="bank_advice_letter.view_hr_payslip_run_payment_method_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <button name="action_view_payment" type="object" string="View Payment" icon="fa-external-link"/>
+            </xpath>
+        </field>
+    </record>-->
+
+</odoo>

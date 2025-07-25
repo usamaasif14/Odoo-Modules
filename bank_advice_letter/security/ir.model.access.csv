@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_employee_bank_user,hr.employee.bank.user,model_hr_employee_bank,hr_payroll.group_hr_payroll_user,1,1,1,0
+access_hr_employee_bank_manager,hr.employee.bank.manager,model_hr_employee_bank,hr_payroll.group_hr_payroll_manager,1,1,1,1
+access_hr_employee_bank_officer,hr.employee.bank.officer,model_hr_employee_bank,hr.group_hr_user,1,0,0,0
+access_hr_payslip_run_user,hr.payslip.run.user,model_hr_payslip_run,hr_payroll.group_hr_payroll_user,1,1,1,0
+access_hr_payslip_run_manager,hr.payslip.run.manager,model_hr_payslip_run,hr_payroll.group_hr_payroll_manager,1,1,1,1
+access_hr_payslip_run_payment_method_line_user,access.hr.payslip.run.payment.method.line.user,model_hr_payslip_run_payment_method_line,base.group_user,1,1,1,1

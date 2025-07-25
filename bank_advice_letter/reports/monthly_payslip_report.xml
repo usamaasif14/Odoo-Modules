@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Hide the default payslip report from the print menu -->
+    <record id="hr_payroll.action_report_payslip" model="ir.actions.report">
+        <field name="binding_model_id" eval="False"/>
+        <field name="paperformat_id" ref="bank_advice_letter.paperformat_advice_letter"/>
+    </record>
+</odoo>

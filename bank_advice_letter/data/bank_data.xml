@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Initial Bank Records -->
+        <record id="bank_hbl" model="hr.bank">
+            <field name="name">Habib Bank Limited (HBL)</field>
+            <field name="code">hbl</field>
+        </record>
+        
+        <record id="bank_ubl" model="hr.bank">
+            <field name="name">United Bank Limited (UBL)</field>
+            <field name="code">ubl</field>
+        </record>
+        
+        <record id="bank_mcb" model="hr.bank">
+            <field name="name">Muslim Commercial Bank (MCB)</field>
+            <field name="code">mcb</field>
+        </record>
+        
+        <record id="bank_abl" model="hr.bank">
+            <field name="name">Allied Bank Limited (ABL)</field>
+            <field name="code">abl</field>
+        </record>
+        
+        <record id="bank_nbp" model="hr.bank">
+            <field name="name">National Bank of Pakistan (NBP)</field>
+            <field name="code">nbp</field>
+        </record>
+        
+        <record id="bank_scb" model="hr.bank">
+            <field name="name">Standard Chartered Bank</field>
+            <field name="code">scb</field>
+        </record>
+        
+        <record id="bank_faysal" model="hr.bank">
+            <field name="name">Faysal Bank</field>
+            <field name="code">faysal</field>
+        </record>
+        
+        <record id="bank_js" model="hr.bank">
+            <field name="name">JS Bank</field>
+            <field name="code">js</field>
+        </record>
+        
+        <record id="bank_askari" model="hr.bank">
+            <field name="name">Askari Bank</field>
+            <field name="code">askari</field>
+        </record>
+        
+        <record id="bank_soneri" model="hr.bank">
+            <field name="name">Soneri Bank</field>
+            <field name="code">soneri</field>
+        </record>
+    </data>
+</odoo> 

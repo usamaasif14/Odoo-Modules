@@ -1,0 +1,26 @@
+<odoo>
+    <record id="view_journal_form_inherit_payable_ac" model="ir.ui.view">
+        <field name="name">account.journal.form.inherit.payable.ac</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_account_id']" position="after">
+                <!-- Removed unconditional field -->
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add a view that only applies to journals with code 'SLR' (Salaries) -->
+    <record id="view_journal_form_slr" model="ir.ui.view">
+        <field name="name">account.journal.form.slr</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_account_id']" position="after">
+                <field name="payable_account_id"
+                       help="Only used for Salaries (SLR) journal."/>
+            </xpath>
+        </field>
+    </record>
+</odoo> 

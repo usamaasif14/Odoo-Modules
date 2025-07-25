@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Remove old actions if they exist -->
+    <delete id="action_print_monthly_payslip" model="ir.actions.server"/>
+    <delete id="action_open_monthly_payslip" model="ir.actions.act_window"/>
+</odoo>

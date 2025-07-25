@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Base Report Template -->
+        <template id="base_report_payslip">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="bank_advice_letter.report_payslip_document" t-lang="doc.employee_id.address_home_id.lang"/>
+                </t>
+            </t>
+        </template>
+
+        <!-- Document Structure -->
+        <template id="report_payslip_document">
+            <div class="page">
+                <t t-raw="0"/>
+            </div>
+        </template>
+    </data>
+</odoo>

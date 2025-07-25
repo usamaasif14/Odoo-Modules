@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extended Payslip Run Form View -->
+    <record id="view_hr_payslip_run_form_inherit" model="ir.ui.view">
+        <field name="name">hr.payslip.run.form.inherit</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+        <field name="arch" type="xml">
+            <!-- Move the payment_method_line_ids list outside of group for full width -->
+            <xpath expr="//group[1]" position="after">
+                <div class="o_full_width">
+                    <field name="payment_method_line_ids" nolabel="1">
+                        <list string="Payment Method Lines" class="o_list_view o_list_view_ungrouped table table-striped table-bordered" style="width:100%">
+                            <field name="payment_type"/>
+                            <field name="bank_id"/>
+                            <field name="journal_id"/>
+                            <field name="cheque_number" readonly="1"/>
+                            <field name="cheque_date" readonly="1"/>
+                            <field name="cheque_amount" class="text-right font-weight-bold"/>
+                            <button name="action_create_payment" type="object" string="Create Payment"/>
+                            <button name="action_print_advice_letter" type="object" string="Print Advice Letter"/>
+                            <button name="action_view_payment" type="object" string="View Payment" icon="fa-external-link"/>
+                        </list>
+                    </field>
+                </div>
+            </xpath>
+          <!--  <xpath expr="//header" position="inside">
+                <button name="action_print_advice_letter" 
+                        string="Print Advice Letter" 
+                        type="object" 
+                        class="btn-primary"
+                        invisible="state != 'close'"/>
+            </xpath>-->
+        </field>
+    </record>
+
+    <!-- Extended Payslip Run List View -->
+    <record id="view_hr_payslip_run_list_inherit" model="ir.ui.view">
+        <field name="name">hr_payslip.run.list.inherit</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_end']" position="after">
+                <!-- Removed obsolete fields: is_cash_payment, bank_name, cheque_amount -->
+            </xpath>
+        </field>
+    </record>
+</odoo>

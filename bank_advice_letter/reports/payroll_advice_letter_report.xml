@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Custom report action -->
+    <record id="paperformat_payroll_advice_letter" model="report.paperformat">
+        <field name="name">Payroll Advice Letter</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">15</field>
+        <field name="margin_bottom">5</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">5</field>
+        <field name="dpi">90</field>
+    </record>
+    <record id="action_report_payroll_letter" model="ir.actions.report">
+        <field name="name">Payroll Advice Letter</field>
+        <field name="model">hr.payslip.run.payment.method.line</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">bank_advice_letter.report_payroll_letter</field>
+        <field name="paperformat_id" ref="paperformat_payroll_advice_letter"/>
+    </record>
+
+    <!-- Report Template -->
+    <template id="report_payroll_letter">
+        <t t-call="web.html_container">
+            <t t-set="datetime" t-value="datetime"/>
+            <t t-foreach="docs" t-as="doc">
+                <main>
+                    <t t-if="doc and doc.get_slips()">
+                        <div class="page" style="margin: 2.5cm 1.5cm 2cm 1.5cm; padding: 0;">
+                            <style>
+                                @page {
+                                    margin: 2.5cm 1.5cm 2cm 1.5cm;
+                                    size: A4;
+                                }
+                                body {
+                                    margin: 0;
+                                    padding: 0;
+                                    font-family: Arial, sans-serif;
+                                    font-size: 12px;
+                                }
+                                .advice-letter {
+                                    font-family: Arial, sans-serif;
+                                    line-height: 1.5;
+                                    color: #000;
+                                    margin: 0;
+                                    padding: 0;
+                                    position: relative;
+                                }
+                                .header-space {
+                                    height: 60px;
+                                    width: 100%;
+                                }
+                                .letter-container {
+                                    background-color: white;
+                                    padding: 20px;
+                                }
+                                .header-section {
+                                    margin-bottom: 30px;
+                                }
+                                .to-section {
+                                    margin-bottom: 25px;
+                                }
+                                .to-label {
+                                    font-weight: bold;
+                                    display: inline-block;
+                                    width: 80px;
+                                }
+                                .subject-section {
+                                    margin-bottom: 20px;
+                                    text-align: center;
+                                    font-size: 20px;
+                                }
+                                .subject-label {
+                                    font-weight: bold;
+                                    display: inline-block;
+                                    width: 80px;
+                                    vertical-align: top;
+                                    font-size: 20px;
+                                }
+                                .subject-text {
+                                    text-decoration: underline;
+                                    font-weight: bold;
+                                    font-size: 20px;
+                                }
+                                .body-text {
+                                    margin-bottom: 25px;
+                                    text-align: justify;
+                                    line-height: 1.6;
+                                }
+                                .cheque-details {
+                                    margin-bottom: 20px;
+                                }
+                                .employee-table {
+                                    width: 100%;
+                                    border-collapse: collapse;
+                                    margin: 20px 0;
+                                    font-size: 11px;
+                                }
+                                .employee-table th {
+                                    background-color: #f5f5f5;
+                                    border: 1px solid #333;
+                                    padding: 10px 5px;
+                                    text-align: center;
+                                    font-weight: bold;
+                                    font-size: 11px;
+                                }
+                                .employee-table td {
+                                    border: 1px solid #333;
+                                    padding: 6px 5px;
+                                    text-align: left;
+                                    vertical-align: middle;
+                                }
+                                .center { text-align: center; }
+                                .right { text-align: right; }
+                                .total-row {
+                                    background-color: #f8f8f8;
+                                    font-weight: bold;
+                                }
+                                .total-row .no-border {
+                                    border: none !important;
+                                    background-color: white !important;
+                                }
+                                .employee-count {
+                                    margin-top: 15px;
+                                    font-size: 12px;
+                                    text-align: right;
+                                    font-weight: bold;
+                                }
+                                .amount-words {
+                                    font-style: italic;
+                                    color: #555;
+                                }
+                                .signature-section {
+                                    margin-top: 40px;
+                                    text-align: left;
+                                }
+                                .signature-line {
+                                    margin-top: 60px;
+                                    border-top: 1px solid #000;
+                                    width: 200px;
+                                    margin-left: 0;
+                                    text-align: left;
+                                    padding-top: 5px;
+                                    font-size: 11px;
+                                }
+                                .error-message {
+                                    color: #d32f2f;
+                                    font-weight: bold;
+                                    background-color: #ffebee;
+                                    padding: 10px;
+                                    border: 1px solid #f44336;
+                                    border-radius: 4px;
+                                    margin: 10px 0;
+                                }
+                            </style>
+
+                            <!-- Set up company and date variables with safe validation -->
+                            <t t-set="company_name" t-value="doc.payslip_run_id.company_id.name.upper() if doc.payslip_run_id.company_id and doc.payslip_run_id.company_id.name else 'COMPANY NAME NOT FOUND'"/>
+                            
+                            <!-- Safely handle dates -->
+                            <t t-set="date_start" t-value="doc.payslip_run_id.date_start or False"/>
+                            <t t-set="date_end" t-value="doc.payslip_run_id.date_end or False"/>
+                            <t t-set="cheque_date" t-value="doc.cheque_date or date_end or date_start"/>
+                            
+                            <!-- Format dates safely -->
+                            <t t-set="month_year" t-value="date_start.strftime('%B %Y').upper() if date_start else 'MONTH YEAR NOT SET'"/>
+                            <t t-set="short_month_year" t-value="date_start.strftime('%b %y').upper() if date_start else 'MONTH YEAR'"/>
+                            <t t-set="formatted_cheque_date" t-value="cheque_date.strftime('%d-%b-%Y') if cheque_date else '__________'"/>
+                            
+                            <!-- Calculate total amount and filter employees by selected bank using only primary bank account -->
+                            <t t-set="filtered_slips" t-value="doc.get_slips()"/>
+                            <t t-set="total_amount" t-value="sum([slip.net_wage for slip in doc.get_slips()])"/>
+                            
+                            <!-- Sort the filtered slips -->
+                            <t t-set="sorted_slips" t-value="sorted(filtered_slips, key=lambda r: r.employee_id.name)"/>
+                            
+                            <!-- Safely get bank name from Many2one -->
+                            <t t-set="bank_name" t-value="doc.bank_id.name or '_________________'"/>
+                            
+                            <!-- Handle cheque number -->
+                            <t t-set="cheque_number" t-value="doc.payment_id.check_book_page_id.name if doc.payment_id and doc.payment_id.check_book_page_id else ''"/>
+                            <t t-if="doc.cheque_number">
+                                <t t-set="cheque_number" t-value="doc.cheque_number"/>
+                            </t>
+                            
+                            <!-- Set cheque amount -->
+                            <t t-set="cheque_amount" t-value="doc.cheque_amount or total_amount"/>
+                            
+                            <!-- Check payment type and details -->
+                            <t t-set="is_cash_payment" t-value="doc.payslip_run_id.bank_name == 'cash'"/>
+                            <t t-set="has_cheque_details" t-value="not is_cash_payment and cheque_number and cheque_number != '______' and bank_name and bank_name != '_________________' and cheque_date"/>
+                            
+                            <t t-if="is_cash_payment">
+                                <div class="alert alert-info mt16" role="alert">
+                                    <strong>Cash Payment:</strong> This is a cash payment. No bank advice letter is required.
+                                </div>
+                            </t>
+                            <t t-elif="not has_cheque_details">
+                                <div class="alert alert-warning mt16" role="alert">
+                                    <strong>Warning:</strong> Some required bank details are missing. Please ensure cheque number, bank name, and date are provided.
+                                </div>
+                            </t>
+                            
+                            <t t-if="not has_cheque_details">
+                                <div class="error-message">
+                                    <h3>Missing Cheque Details</h3>
+                                    <p>Please fill in the following details before printing the advice letter:</p>
+                                    <ul>
+                                        <t t-if="not (doc.payment_id.check_book_page_id.name or (doc.payment_id and doc.payment_id.check_book_page_id and doc.payment_id.check_book_page_id.name))">
+                                            <li>Cheque Number is required</li>
+                                        </t>
+                                        <t t-if="bank_name == '_________________'">
+                                            <li>Bank Name is required</li>
+                                        </t>
+                                        <t t-if="not cheque_date.strftime('%d-%m-%y')">
+                                            <li>Cheque Date is required</li>
+                                        </t>
+                                    </ul>
+                                </div>
+                            </t>
+                            
+                            <div class="advice-letter">
+                                <div class="header-space"></div>
+                                <div class="letter-container">
+                                    <!-- Header section with date and address -->
+                                    <div class="header-section">
+                                        <!-- Date section in top-right corner - Current Date -->
+                                        <div style="text-align: right; margin-bottom: 20px; font-size: 12px;">
+                                            <strong>Date: <t t-esc="datetime.date.today().strftime('%B %d, %Y')"/></strong>
+                                        </div>
+                                        
+                                        <div class="to-section">
+                                            <span class="to-label">To,</span>
+                                            <div style="margin-left: 30px; font-weight: bold;">
+                                                The Manager,<br/>
+                                                <t t-if="doc.payslip_run_id.bank_name == 'cash'">
+                                                    <div class="bank-name" style="font-weight: bold;">CASH PAYMENT</div>
+                                                </t>
+                                                <t t-else="">
+                                                    <div class="bank-name" style="font-weight: bold;" t-esc="bank_name"/>
+                                                </t>
+                                                <!-- Bank address from res.bank model -->
+                                                <span style="font-weight: normal;">
+                                                    <t t-if="doc.bank_id">
+                                                        <t t-esc="doc.bank_id.street or ''"/>
+                                                        <t t-if="doc.bank_id.street and doc.bank_id.city">, </t>
+                                                        <t t-esc="doc.bank_id.city or ''"/>
+                                                        <t t-if="doc.bank_id.state">, <t t-esc="doc.bank_id.state.name"/></t>
+                                                    </t>
+                                                    <t t-if="not doc.bank_id">Address not available</t>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="subject-section">
+                                        <span class="subject-label">Subject:</span>
+                                        <span class="subject-text">
+                                            Salary Disbursement Instructions - 
+                                            <t t-esc="date_start.strftime('%b %Y').upper() if date_start else 'MONTH YEAR'"/>
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="body-text">
+                                        <p>Dear Sir/Madam,</p>
+                                        <div class="cheque-details">
+                                            Kindly refer to the subject noted above and find enclosed herewith cross cheque number  
+                                            [<strong><t t-esc="doc.payment_id.check_book_page_id.name or ''"/></strong>]
+                                            dated <strong><t t-esc="doc.cheque_date.strftime('%d-%m-%y') if doc.cheque_date else (doc.payment_id.cheque_date.strftime('%d-%m-%y') if doc.payment_id and doc.payment_id.cheque_date else '')"/></strong>
+                                            amounting to PKR <strong><t t-esc="'{:,.0f}'.format(float(doc.payment_id.amount or 0))"/></strong>
+                                            <!-- Enhanced amount in words -->
+                                            <t t-if="doc.payment_id.amount">
+                                                (<span class="amount-words">
+                                                    <t t-esc="doc.amount_in_words or ''"/>
+                                                </span>)
+                                            </t>, drawn in
+                                            the name of <strong><t t-esc="bank_name"/></strong>, with a request to kindly credit the said amount to the respective bank
+                                            accounts of the employees listed below, as part of their salary disbursement for the month of  
+                                            <strong><t t-esc="date_start.strftime('%B %Y') if date_start else ''"/></strong>,
+                                            as per the details mentioned against their names.
+                                        </div>
+                                    </div>
+                                    
+                                    <table class="employee-table">
+                                        <thead>
+                                            <tr>
+                                                <th rowspan="2">Sr. #</th>
+                                                <th rowspan="2">Name</th>
+                                                <th rowspan="2">Account No</th>
+                                                <!--<th rowspan="2">Bank</th>-->
+                                                <th rowspan="2">Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-set="counter" t-value="0"/>
+                                            <t t-foreach="doc.get_slips()" t-as="slip">
+                                                <t t-set="counter" t-value="counter + 1"/>
+                                                <tr>
+                                                    <td><t t-esc="counter"/></td>
+                                                    <td><t t-esc="slip.employee_id.name or ''"/></td>
+                                                    <td style="text-align: center;"><t t-esc="slip.employee_id.bank_account_id.acc_number if slip.employee_id.bank_account_id else ''"/></td>
+                                                   <!-- <td style="text-align: center;"><t t-esc="slip.employee_id.bank_account_id.bank_id.name if slip.employee_id.bank_account_id and slip.employee_id.bank_account_id.bank_id else ''"/></td>-->
+                                                    <td style="text-align: right;" class="right">
+                                                        <t t-esc="'{:,.2f}'.format(slip.net_wage).rstrip('0').rstrip('.') if slip.net_wage else 'Rs. 0'"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="not doc.get_slips()">
+                                                <tr>
+                                                    <td colspan="4" class="center">
+                                                        No employees found with the selected bank account.
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <tr class="total-row">
+                                                <td colspan="2" class="no-border"></td>
+                                                <td style="text-align: right;" class="right"><strong>Grand Total:</strong></td>
+                                                <td style="text-align: right;" class="right">
+                                                    <strong>
+                                                        <t t-esc="'Rs. {:,.2f}'.format(total_amount)"/>
+                                                    </strong>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    
+                                    <div class="employee-count" style="margin-top: 15px; font-weight: bold;">
+                                        Total Employees: <t t-esc="len(doc.get_slips())"/>
+                                    </div>
+                                    
+                                    <t t-if="not has_cheque_details">
+                                        <div class="cheque-details">
+                                            <div>Cheque No: <span><t t-esc="cheque_number"/></span></div>
+                                            <div>Date: <span><t t-esc="formatted_cheque_date"/></span></div>
+                                        </div>
+                                    </t>
+                                    
+                                    <!-- Signature section - Left aligned -->
+                                    <div class="signature-section">
+                                        <div style="margin-top: 60px; font-weight: bold; text-align: left;">
+                                            <t t-esc="company_name"/>
+                                        </div>
+                                        <div style="margin-top: 90px; border-top: 1px solid #000; width: 200px; margin-left: 0; text-align: left; padding-top: 5px; font-size: 11px;">
+                                            Partner
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="error-message">
+                            <h3>Error: Unable to Generate Report</h3>
+                            <p>
+                                <t t-if="not doc">No payslip run data found.</t>
+                                <t t-elif="not doc.get_slips()">No employee payslips found in this batch.</t>
+                                <t t-else="">Invalid data structure.</t>
+                            </p>
+                        </div>
+                    </t>
+                </main>
+            </t>
+        </t>
+    </template>
+
+    <!-- Enhanced amount to words conversion template with lakhs and hundreds -->
+    <template id="amount_to_words">
+        <t t-set="amount_float" t-value="float(amount or 0)"/>
+        <t t-set="amount_int" t-value="int(amount_float)"/>
+        <t t-set="amount_decimal" t-value="int(round((amount_float - amount_int) * 100))"/>
+        
+        <!-- Pakistani number to words conversion -->
+        <t t-choose="">
+            <t t-when="amount_int == 0 and amount_decimal == 0">Zero</t>
+            <t t-when="amount_int &lt; 100">
+                <t t-call="bank_advice_letter.convert_below_hundred">
+                    <t t-set="number" t-value="amount_int"/>
+                </t>
+            </t>
+            <t t-when="amount_int &lt; 1000">
+                <t t-set="hundreds" t-value="int(amount_int / 100)"/>
+                <t t-set="remainder" t-value="amount_int % 100"/>
+                <t t-call="bank_advice_letter.convert_below_hundred">
+                    <t t-set="number" t-value="hundreds"/>
+                </t>
+                <t t-if="hundreds == 1"> Hundred</t>
+                <t t-else=""> Hundreds</t>
+                <t t-if="remainder > 0">
+                    <t t-call="bank_advice_letter.convert_below_hundred">
+                        <t t-set="number" t-value="remainder"/>
+                    </t>
+                </t>
+            </t>
+            <t t-when="amount_int &lt; 100000">
+                <t t-set="thousands" t-value="int(amount_int / 1000)"/>
+                <t t-set="remainder" t-value="amount_int % 1000"/>
+                <t t-call="bank_advice_letter.convert_below_hundred">
+                    <t t-set="number" t-value="thousands"/>
+                </t>
+                <t t-if="thousands == 1"> Thousand </t>
+                <t t-else=""> Thousands </t>
+                <t t-if="remainder >= 100">
+                    <t t-set="hundreds" t-value="int(remainder / 100)"/>
+                    <t t-set="final_remainder" t-value="remainder % 100"/>
+                    <t t-call="bank_advice_letter.convert_below_hundred">
+                        <t t-set="number" t-value="hundreds"/>
+                    </t>
+                    <t t-if="hundreds == 1"> Hundred</t>
+                    <t t-else=""> Hundreds</t>
+                    <t t-if="final_remainder > 0">
+                        <t t-call="bank_advice_letter.convert_below_hundred">
+                            <t t-set="number" t-value="final_remainder"/>
+                        </t>
+                    </t>
+                </t>
+                <t t-elif="remainder > 0">
+                    <t t-call="bank_advice_letter.convert_below_hundred">
+                        <t t-set="number" t-value="remainder"/>
+                    </t>
+                </t>
+            </t>
+            <t t-when="amount_int &lt; 10000000">
+                <t t-set="lakhs" t-value="int(amount_int / 100000)"/>
+                <t t-set="remainder" t-value="amount_int % 100000"/>
+                <t t-call="bank_advice_letter.convert_below_hundred">
+                    <t t-set="number" t-value="lakhs"/>
+                </t>
+                <t t-if="lakhs == 1"> Lakh </t>
+                <t t-else=""> Lakhs </t>
+                <t t-if="remainder >= 1000">
+                    <t t-set="thousands" t-value="int(remainder / 1000)"/>
+                    <t t-set="final_remainder" t-value="remainder % 1000"/>
+                    <t t-call="bank_advice_letter.convert_below_hundred">
+                        <t t-set="number" t-value="thousands"/>
+                    </t>
+                    <t t-if="thousands == 1"> Thousand </t>
+                    <t t-else=""> Thousands </t>
+                    <t t-if="final_remainder >= 100">
+                        <t t-set="hundreds" t-value="int(final_remainder / 100)"/>
+                        <t t-set="last_remainder" t-value="final_remainder % 100"/>
+                        <t t-call="bank_advice_letter.convert_below_hundred">
+                            <t t-set="number" t-value="hundreds"/>
+                        </t>
+                        <t t-if="hundreds == 1"> Hundred</t>
+                        <t t-else=""> Hundreds</t>
+                        <t t-if="last_remainder > 0">
+                            <t t-call="bank_advice_letter.convert_below_hundred">
+                                <t t-set="number" t-value="last_remainder"/>
+                            </t>
+                        </t>
+                    </t>
+                    <t t-elif="final_remainder > 0">
+                        <t t-call="bank_advice_letter.convert_below_hundred">
+                            <t t-set="number" t-value="final_remainder"/>
+                        </t>
+                    </t>
+                </t>
+                <t t-elif="remainder >= 100">
+                    <t t-set="hundreds" t-value="int(remainder / 100)"/>
+                    <t t-set="final_remainder" t-value="remainder % 100"/>
+                    <t t-call="bank_advice_letter.convert_below_hundred">
+                        <t t-set="number" t-value="hundreds"/>
+                    </t>
+                    <t t-if="hundreds == 1"> Hundred</t>
+                    <t t-else=""> Hundreds</t>
+                    <t t-if="final_remainder > 0">
+                        <t t-call="bank_advice_letter.convert_below_hundred">
+                            <t t-set="number" t-value="final_remainder"/>
+                        </t>
+                    </t>
+                </t>
+                <t t-elif="remainder > 0">
+                    <t t-call="bank_advice_letter.convert_below_hundred">
+                        <t t-set="number" t-value="remainder"/>
+                    </t>
+                </t>
+            </t>
+            <t t-otherwise="">
+                <t t-set="crores" t-value="int(amount_int / 10000000)"/>
+                <t t-set="remainder" t-value="amount_int % 10000000"/>
+                <t t-call="bank_advice_letter.convert_below_hundred">
+                    <t t-set="number" t-value="crores"/>
+                </t>
+                <t t-if="crores == 1"> Crore </t>
+                <t t-else=""> Crores </t>
+                <!-- Handle remaining amount after crores -->
+                <t t-if="remainder > 0">
+                    <t t-call="bank_advice_letter.amount_to_words">
+                        <t t-set="amount" t-value="remainder"/>
+                    </t>
+                </t>
+            </t>
+        </t>
+        
+        <t t-if="amount_int == 1"> Rupee</t>
+        <t t-elif="amount_int != 0"> Rupees</t>
+        
+        <t t-if="amount_decimal > 0">
+            <t t-if="amount_int > 0"> and </t>
+            <t t-esc="amount_decimal"/> Paisa
+        </t>
+        
+        <t t-if="amount_int > 0 or amount_decimal > 0"> Only</t>
+    </template>
+
+    <!-- Helper template for converting numbers below 100 - FIXED VERSION -->
+    <template id="convert_below_hundred">
+        <t t-set="ones" t-value="['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen']"/>
+        <t t-set="tens" t-value="['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety']"/>
+        
+        <!-- Add validation to ensure number is within valid range -->
+        <t t-set="safe_number" t-value="int(number or 0)"/>
+        <t t-if="safe_number &lt; 0">
+            <t t-set="safe_number" t-value="0"/>
+        </t>
+        
+        <t t-choose="">
+            <t t-when="safe_number == 0"></t>
+            <t t-when="safe_number &lt; 20 and safe_number >= 0">
+                <t t-esc="ones[safe_number]"/>
+            </t>
+            <t t-when="safe_number &lt; 100">
+                <t t-set="ten_digit" t-value="int(safe_number / 10)"/>
+                <t t-set="unit_digit" t-value="safe_number % 10"/>
+                <t t-if="ten_digit >= 2 and ten_digit &lt;= 9">
+                    <t t-esc="tens[ten_digit]"/>
+                    <t t-if="unit_digit > 0 and unit_digit &lt; 20"> <t t-esc="ones[unit_digit]"/></t>
+                </t>
+            </t>
+            <t t-otherwise="">
+                <!-- Handle numbers >= 100 (should not happen in this template but added for safety) -->
+                <t t-esc="safe_number"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>
