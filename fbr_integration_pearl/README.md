@@ -1,7 +1,7 @@
 # FBR Integration Enhanced
 
 **Version:** 18.0.1.0  
-**Price:** PKR 70,000  
+**Price:** USD 400  
 **License:** LGPL-3  
 
 ---
@@ -56,7 +56,7 @@ It comes with enhanced dropdown field support for flexible invoice handling.
 ---
 
 ## 💰 Pricing
-- **PKR 70,000 (one-time license)**  
+- **USD 400 (one-time license)**  
 - Customizations available on request  
 
 ---
