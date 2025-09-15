@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Invoice Form View Inheritance -->
+        <record id="view_move_form_fbr" model="ir.ui.view">
+            <field name="name">account.move.form.fbr</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                
+                <!-- Add FBR buttons in header -->
+                <xpath expr="//header" position="inside">
+                    <button name="action_post_data_to_fbr" 
+                            string="Send to FBR" 
+                            type="object" 
+                            class="btn-primary"
+                            invisible="state != 'posted' or move_type not in ('out_invoice', 'out_refund')"/>
+                </xpath>
+
+                <!-- Add FBR status field -->
+                <xpath expr="//field[@name='payment_reference']" position="after">
+                    <field name="fbr_status" invisible="move_type not in ('out_invoice', 'out_refund')"/>
+                    <field name="fbr_invoice_number" invisible="not fbr_invoice_number"/>
+                    <field name="scenario_id" invisible="not display_scenario"/>
+                    <field name="display_scenario" invisible="1"/>
+                </xpath>
+
+                <!-- Add FBR fields to invoice lines - Updated XPath -->
+                <xpath expr="//field[@name='invoice_line_ids']//field[@name='tax_ids']" position="after">
+                    <field name="fbr_hs_code_id" column_invisible="1"/>
+                    <field name="fbr_uom_id" column_invisible="1"/>
+                    <field name="sale_type" column_invisible="1"/>
+                </xpath>
+
+                <!-- Add notebook page for FBR details -->
+                <xpath expr="//notebook" position="inside">
+                    <page string="FBR Details" invisible="move_type not in ('out_invoice', 'out_refund')">
+                        <group>
+                            <group string="FBR Status">
+                                <field name="fbr_status"/>
+                                <field name="fbr_post_successful"/>
+                                <field name="fbr_invoice_number"/>
+                            </group>
+                            <group string="QR Code">
+                                <field name="fbr_qr_image" widget="image" options="{'size': [200, 200]}"/>
+                            </group>
+                        </group>
+                        
+                        <group string="FBR Request">
+                            <field name="fbr_request" nolabel="1"/>
+                        </group>
+                        
+                        <group string="FBR Response">
+                            <field name="fbr_response" nolabel="1"/>
+                        </group>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- Invoice Line Form View -->
+        <record id="view_move_line_form_fbr" model="ir.ui.view">
+            <field name="name">account.move.line.form.fbr</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tax_ids']" position="after">
+                    <notebook>
+                        <page string="FBR Details">
+                            <group>
+                                <group string="Product Classification">
+                                    <field name="fbr_hs_code_id"/>
+                                    <field name="pct_code"/>
+                                    <field name="fbr_uom_id"/>
+                                    <field name="sale_type"/>
+                                </group>
+                                <group string="SRO Details">
+                                    <field name="sro_schedule"/>
+                                    <field name="sro_item"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Tax Details">
+                                    <field name="fed_duty"/>
+                                    <field name="further_tax"/>
+                                    <field name="extra_tax"/>
+                                    <field name="withholding_tax"/>
+                                    <field name="other_tax"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

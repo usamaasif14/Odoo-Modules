@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record id="view_res_config_settings_fbr_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.fbr</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//app[@name='general_settings']/div[@id='invite_users']" position="after">
+                    <div class="app_settings_block" string="FBR Integration">
+                        <block title="FBR Configuration" name="fbr_settings_block">
+                            <setting id="fbr_mode_setting">
+                                <label for="fbr_mode"/>
+                                <div class="text-muted">Environment for FBR API calls</div>
+                                <field name="fbr_mode"/>
+                            </setting>
+                            
+                            <setting id="fbr_token_setting">
+                                <label for="fbr_token"/>
+                                <div class="text-muted">Bearer token for FBR API authentication</div>
+                                <field name="fbr_token" password="True"/>
+                            </setting>
+                            
+                            <setting id="fbr_bpos_setting">
+                                <label for="fbr_bpos_id"/>
+                                <div class="text-muted">FBR BPOS ID for your organization</div>
+                                <field name="fbr_bpos_id"/>
+                            </setting>
+                            
+                            <setting id="fbr_service_enable_setting">
+                                <field name="fbr_enable_service"/>
+                                <label for="fbr_enable_service"/>
+                                <div class="text-muted">Add service fee to invoices sent to FBR</div>
+                            </setting>
+                            
+                            <setting id="fbr_service_fee_setting" invisible="not fbr_enable_service">
+                                <label for="fbr_service_fee"/>
+                                <div class="text-muted">Service fee amount to add</div>
+                                <field name="fbr_service_fee"/>
+                            </setting>
+                            
+                            <setting id="fbr_auto_sync_setting">
+                                <field name="fbr_auto_sync"/>
+                                <label for="fbr_auto_sync"/>
+                                <div class="text-muted">Automatically sync FBR reference data</div>
+                            </setting>
+                        </block>
+                        
+                        <block title="FBR Data Management" name="fbr_data_block">
+                            <setting id="fbr_sync_action_setting">
+                                <div class="o_form_label">Sync FBR Data</div>
+                                <div class="text-muted">Manually sync provinces, HS codes, and UOMs from FBR</div>
+                                <button name="action_sync_fbr_data" 
+                                        string="Sync Now" 
+                                        type="object" 
+                                        class="btn-primary"/>
+                            </setting>
+                        </block>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

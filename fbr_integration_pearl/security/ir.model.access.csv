@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_fbr_reference_data_user,FBR Reference Data User,model_fbr_reference_data,base.group_user,1,0,0,0
+access_fbr_reference_data_manager,FBR Reference Data Manager,model_fbr_reference_data,account.group_account_manager,1,1,1,1
+access_fbr_reference_data_invoice,FBR Reference Data Invoice User,model_fbr_reference_data,account.group_account_invoice,1,0,0,0
+access_fbr_data_sync_user,FBR Data Sync User,model_fbr_data_sync,base.group_user,1,0,0,0
+access_fbr_data_sync_manager,FBR Data Sync Manager,model_fbr_data_sync,account.group_account_manager,1,1,1,1
+access_fbr_data_sync_invoice,FBR Data Sync Invoice User,model_fbr_data_sync,account.group_account_invoice,1,0,0,0

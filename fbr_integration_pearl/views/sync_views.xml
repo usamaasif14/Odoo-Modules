@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- FBR Reference Data Views -->
+        <record id="view_fbr_reference_data_list" model="ir.ui.view">
+            <field name="name">fbr.reference.data.list</field>
+            <field name="model">fbr.reference.data</field>
+            <field name="arch" type="xml">
+                <list string="FBR Reference Data">
+                    <field name="data_type"/>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_fbr_reference_data_form" model="ir.ui.view">
+            <field name="name">fbr.reference.data.form</field>
+            <field name="model">fbr.reference.data</field>
+            <field name="arch" type="xml">
+                <form string="FBR Reference Data">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="data_type"/>
+                            </group>
+                            <group>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_fbr_reference_data_search" model="ir.ui.view">
+            <field name="name">fbr.reference.data.search</field>
+            <field name="model">fbr.reference.data</field>
+            <field name="arch" type="xml">
+                <search string="FBR Reference Data">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <filter string="Provinces" name="provinces" domain="[('data_type', '=', 'province')]"/>
+                    <filter string="HS Codes" name="hs_codes" domain="[('data_type', '=', 'hs_code')]"/>
+                    <filter string="UOMs" name="uoms" domain="[('data_type', '=', 'uom')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Data Type" name="group_data_type" context="{'group_by': 'data_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_fbr_reference_data" model="ir.actions.act_window">
+            <field name="name">FBR Reference Data</field>
+            <field name="res_model">fbr.reference.data</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_fbr_reference_data_search"/>
+        </record>
+
+        <!-- FBR Data Sync Views -->
+        <record id="view_fbr_data_sync_list" model="ir.ui.view">
+            <field name="name">fbr.data.sync.list</field>
+            <field name="model">fbr.data.sync</field>
+            <field name="arch" type="xml">
+                <list string="FBR Data Sync">
+                    <field name="name"/>
+                    <field name="last_sync_date"/>
+                    <field name="sync_status"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_fbr_data_sync_form" model="ir.ui.view">
+            <field name="name">fbr.data.sync.form</field>
+            <field name="model">fbr.data.sync</field>
+            <field name="arch" type="xml">
+                <form string="FBR Data Sync">
+                    <header>
+                        <button name="sync_reference_data" string="Sync All Data" type="object" class="btn-primary"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="last_sync_date"/>
+                                <field name="sync_status"/>
+                            </group>
+                        </group>
+                        <group string="Sync Log">
+                            <field name="sync_log" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_fbr_data_sync" model="ir.actions.act_window">
+            <field name="name">FBR Data Sync</field>
+            <field name="res_model">fbr.data.sync</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <!-- Menu Items -->
+        <menuitem id="menu_fbr_main" name="FBR Integration" sequence="50"/>
+        
+        <menuitem id="menu_fbr_reference_data" 
+                  name="Reference Data" 
+                  parent="menu_fbr_main" 
+                  action="action_fbr_reference_data" 
+                  sequence="10"/>
+                  
+        <menuitem id="menu_fbr_data_sync" 
+                  name="Data Sync" 
+                  parent="menu_fbr_main" 
+                  action="action_fbr_data_sync" 
+                  sequence="20"/>
+
+    </data>
+</odoo>
